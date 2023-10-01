@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ <link rel="stylesheet" href="./css/user.css">
+ <title>Blog</title>
+</head>
+<body>
+  <div class="header">
+   <h5>Blog</h5>
+  </div>
+  <div class="upper-btn-box">
+   <div class="left-box">
+    <button id="add-btn"><i class="fa fa-plus"></i> &nbsp;Add blog</button>
+    <button><i class="fa fa-eraser"></i> &nbsp; Clear</button>
+   </div>
+   <div class="right-box">
+    <i class="fa fa-search"></i>
+    <input type="text" id="blog-id" placeholder="Enter blog ID">
+    <button style="background-color: #EE534F;">Search</button>
+   </div>
+  </div>
+
+  <div class="table-box">
+   <table id="table-data" class="table-data">
+    <tr>
+     <th>Sr No</th>
+     <th>images</th>
+     <th>Title</th>
+     <th>Author</th>
+     <th>Date</th>
+     <th>Content</th>
+     <th>Action</th>
+    </tr>
+   </table>
+  </div>
+
+  <div class="modal">
+   <i class="fa fa-times-circle close-icon"></i>
+   <div class="left-modal">
+    <div class="img-box">
+     <img src="./images/avatar.jpg" width="150px" height="150px" alt="">
+     <i class="fa fa-plus"></i>
+     <input type="file">
+    </div>
+   </div>
+   <div class="right-modal">
+    <form id="create-blog-form">
+      <div class="input-box">
+         <label for="blog-id">ID</label>
+         <input type="text" id="blog-id">
+      </div>
+      <div class="input-box">
+        <label for="title">Title</label>
+        <input type="text" id="title">
+      </div>
+      <div class="input-box">
+       <label for="author">Author</label>
+       <input type="text" id="author">
+      </div>
+      <div class="input-box">
+         <label for="date">Date</label>
+         <input type="text" id="date">
+       </div>
+      <div class="input-box">
+         <label for="content">Content</label>
+         <textarea id="content"></textarea>
+      </div>
+      <div class="input-box">
+       <button id="create-blog-btn">Create</button>
+       <button disabled="disabled" style="background-color: #EE534F;">Update</button>
+      </div>
+    </form>
+   </div>
+  </div>
+
+  <script>
+  
+
+ var addBtn = document.getElementById("add-btn");
+   var modal = document.querySelector(".modal");
+   var closeBtn = document.querySelector(".close-icon");
+
+   // All global variables
+   var blogData = JSON.parse(localStorage.getItem("blogData")) || [];
+   var createBlogBtn = document.querySelector("#create-blog-btn");
+   var blogIdEl = document.getElementById("blog-id");
+   var titleEl = document.getElementById("title");
+   var authorEl = document.getElementById("author");
+   var dateEl = document.getElementById("date");
+   var contentEl = document.getElementById("content");
+   var createBlogForm = document.querySelector('#create-blog-form');
+   var thumbnailUrl;
+
+   addBtn.onclick = function() {
+     modal.style.display = "flex";
+   };
+
+   closeBtn.addEventListener("click", function() {
+     modal.style.display = "none";
+   });
+
+   createBlogBtn.onclick = function (e) {
+     e.preventDefault();
+     createBlogData();
+     createBlogForm.reset();
+     closeBtn.click();
+   };
+
+   if (localStorage.getItem("blogData") !== null) {
+     blogData = JSON.parse(localStorage.getItem("blogData"));
+   }
+
+   function createBlogData() {
+     blogData.push({
+       id: blogIdEl.value,
+       title: titleEl.value,
+       author: authorEl.value,
+       date: dateEl.value,
+       content: contentEl.value,
+       thumbnail: thumbnailUrl == undefined ? "img/thumbnail.jpg" : thumbnailUrl
+     });
+
+     // Clear the table
+     var tableData = document.getElementById("table-data");
+     tableData.innerHTML = "";
+
+     var blogString = JSON.stringify(blogData);
+     localStorage.setItem("blogData", blogString);
+   }
+
+   // Function to populate table data from local storage
+   function populateTableData() {
+     var tableData = document.getElementById("table-data");
+
+     for (var i = 0; i < blogData.length; i++) {
+       var data = blogData[i];
+       var row = document.createElement("tr");
+
+       row.innerHTML += `
+         <td>${i + 1}</td>
+         <td>${data.thumbnail}</td>
+         <td>${data.id}</td>
+         <td>${data.title}</td>
+         <td>${data.author}</td>
+         <td>${data.date}</td>
+         <td>${data.content}</td>
+         <td>
+           <button onclick="viewBlog(${i})"><i class="fa fa-eye"></i></button>
+           <button style="background-color: #EE534F;" onclick="deleteBlog(${i})"><i class="fa fa-trash"></i></button>
+         </td>
+       `;
+
+       tableData.appendChild(row);
+     }
+   }
+
+   // Function to view blog information
+   function viewBlog(index) {
+     var blog = blogData[index];
+     // Perform the desired action to view the blog information (e.g., display in a modal)
+     console.log(blog);
+   }
+
+   // Function to delete a blog
+   function deleteBlog(index) {
+     blogData.splice(index, 1);
+     var blogString = JSON.stringify(blogData);
+     localStorage.setItem("blogData", blogString);
+
+     // Clear the table
+     var tableData = document.getElementById("table-data");
+     tableData.innerHTML = "";
+
+     // Repopulate the table with updated data
+     populateTableData();
+   }
+
+   populateTableData();
+  </script>
+</body>
+</html>

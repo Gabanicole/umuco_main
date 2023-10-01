@@ -1,0 +1,231 @@
+<!Doctype HTML>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="css/dashboard.css" type="text/css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ <link rel="stylesheet" href="./css/user.css">
+</head>
+
+
+<body>
+	
+	<div id="mySidenav" class="sidenav">
+	<p class="logo">Umuco wacu</p>
+  <a href="#" class="icon-a"><i class="fa fa-dashboard icons"></i> &nbsp;&nbsp;Dashboard</a>
+  <a href="user.html"class="icon-a"><i class="fa fa-users icons"></i> &nbsp;&nbsp;Users</a>
+  <a href="sites.html"class="icon-a"><i class="fa fa-list icons"></i> &nbsp;&nbsp;sites</a>
+  <a href="blogs.html"class="icon-a"><i class="fa fa-shopping-bag icons"></i> &nbsp;&nbsp;Blogs</a>
+  <a href="#"class="icon-a"><i class="fa fa-user icons"></i> &nbsp;&nbsp;Accounts</a>
+
+
+</div>
+<div id="main">
+
+	<div class="head">
+		<div class="col-div-6">
+<span style="font-size:30px;cursor:pointer; color: #EE534F;" class="nav"  >&#9776; User</span>
+<span style="font-size:30px;cursor:pointer; color: #EE534F;" class="nav2"  >&#9776; Dashboard</span>
+</div>
+	
+	<div class="col-div-6">
+	<div class="profile">
+
+		<img src="images/user.png" class="pro-img" />
+		<p>Super admin</p>
+	</div>
+</div>
+	<div class="clearfix"></div>
+</div>
+
+	<div class="clearfix"></div>
+ 
+	<div class="clearfix"></div>
+	<br/><br/>
+	<div class="col-div-12">
+		<div class="box-12">
+   <div class="upper-btn-box">
+    <div class="left-box">
+     <button id="add-btn"><i class="fa fa-plus"></i> &nbsp;Add user</button>
+     <button><i class="fa fa-eraser"></i> &nbsp; Clear</button>
+    </div>
+    <div class="right-box">
+     <i class="fa fa-search"></i>
+     <input type="text" id="empid" placeholder="Enter user id">
+     <button style="background-color: #EE534F;">search</button>
+    </div>
+   </div>
+ 
+   <div class="table-box">
+    <table id="table-data" class="table-data">
+     <tr>
+      <th>Sr No</th>
+      <th>Profile</th>
+      <th>id</th>
+      <th>Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Action</th>
+     </tr>
+    </table>
+   </div>
+ 
+   <div class="modal">
+    <i class="fa fa-times-circle close-icon"></i>
+    <div class="left-modal">
+     <div class="img-box">
+      <img src="./images/avatar.jpg" width="150px" height="150px" alt="">
+      <i class="fa fa-plus"></i>
+      <input type="file">
+     </div>
+    </div>
+    <div class="right-modal">
+     <form id="register-form">
+       <div class="input-box">
+          <label for="id">id</label>
+          <input type="text" id="id">
+       </div>
+       <div class="input-box">
+         <label for="name">Name</label>
+         <input type="text" id="name">
+       </div>
+       <div class="input-box">
+        <label for="l-name">Last name</label>
+        <input type="text" id="l-name">
+       </div>
+       <div class="input-box">
+          <label for="email">Email</label>
+          <input type="text" id="email">
+        </div>
+       <div class="input-box">
+        <label for="role">Role</label>
+        <input type="text" id="role">
+       </div>
+       <div class="input-box">
+        <button id="register-btn">Register</button>
+        <button disabled="disabled" style="background-color: #EE534F;">Update</button>
+       </div>
+     </form>
+    </div>
+   </div>
+	</div>
+	</div>
+
+ 
+		
+	<div class="clearfix"></div>
+</div>
+
+
+<script>
+ var addBtn = document.getElementById("add-btn");
+ var modal = document.querySelector(".modal");
+ var closeBtn = document.querySelector(".close-icon");
+
+ // All global variables
+ var userData = JSON.parse(localStorage.getItem("userData")) || [];
+ var registerBtn = document.querySelector("#register-btn");
+ var idEl = document.getElementById("id");
+ var nameEl = document.getElementById("name");
+ var l_nameEl = document.getElementById("l-name");
+ var emailEl = document.getElementById("email");
+ var roleEl = document.getElementById("role");
+ var registerForm = document.querySelector('#register-form');
+ var imgUrl;
+
+ addBtn.onclick = function() {
+   modal.style.display = "flex";
+ };
+
+ closeBtn.addEventListener("click", function() {
+   modal.style.display = "none";
+ });
+
+ registerBtn.onclick = function (e) {
+e.preventDefault();
+registrationData();
+registerForm.reset();
+closeBtn.click();
+};
+
+
+ if (localStorage.getItem("userData") !== null) {
+   userData = JSON.parse(localStorage.getItem("userData"));
+ }
+
+ function registrationData() {
+   userData.push({
+     id: idEl.value,
+     name: nameEl.value,
+     l_name: l_nameEl.value,
+     email: emailEl.value,
+     role: roleEl.value,
+     profilePic: imgUrl == undefined ? "img/avatar.jpg" : imgUrl
+   });
+
+    // Clear the table
+var tableData = document.getElementById("table-data");
+tableData.innerHTML = "";
+
+   var userString = JSON.stringify(userData);
+   localStorage.setItem("userData", userString);
+ }
+
+ // Function to populate table data from local storage
+function populateTableData() {
+var tableData = document.getElementById("table-data");
+
+for (var i = 0; i < userData.length; i++) {
+  var data = userData[i];
+  var row = document.createElement("tr");
+
+  row.innerHTML += `
+    <td>${i + 1}</td>
+    <td>${data.profilePic}</td>
+    <td>${data.id}</td>
+    <td>${data.name}</td>
+    <td>${data.l_name}</td>
+    <td>${data.email}</td>
+    <td>${data.role}</td>
+    <td>
+      <button onclick="viewUser(${i})"><i class="fa fa-eye"></i></button>
+      <button style="background-color: #EE534F;" onclick="deleteUser(${i})"><i class="fa fa-trash"></i></button>
+    </td>
+  `;
+
+  tableData.appendChild(row);
+}
+}
+// Function to view user information
+function viewUser(index) {
+var user = userData[index];
+// Perform the desired action to view the user information (e.g., display in a modal)
+console.log(user);
+}
+
+// Function to delete a user
+function deleteUser(index) {
+userData.splice(index, 1);
+var userString = JSON.stringify(userData);
+localStorage.setItem("userData", userString);
+
+// Clear the table
+var tableData = document.getElementById("table-data");
+tableData.innerHTML = "";
+
+// Repopulate the table with updated data
+populateTableData();
+}
+ populateTableData();
+</script>
+
+
+</body>
+
+
+</html>

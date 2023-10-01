@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="./css/login.css">
+  <!-- Font Awesome Cdn Link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Hello</h1>
+    <p>Welcome <br> To Heritage site!</p>
+    <form>
+      <input type="text" id="username" placeholder="Username">
+      <input type="text" id="email" placeholder="Enter Email">
+      <input type="password" id="password" placeholder="Password">
+    </form>
+    <button id="registerButton">Register</button>
+    <p class="or">
+      ----- or continue with -----
+    </p>
+    <div class="icons">
+      <i class="fab fa-google"></i>
+      <i class="fab fa-facebook"></i>
+    </div>
+    <div class="not-member">
+      Already a member? <a href="login.html">Login</a>
+    </div>
+  </div>
+  <script>
+    const registerButton = document.getElementById("registerButton");
+    const usernameInput = document.getElementById("username");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    registerButton.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const username = usernameInput.value;
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      // Check if any field is empty
+      if (!username.trim() || !email.trim() || !password.trim()) {
+        alert("Please enter all fields.");
+        return;
+      }
+
+      const signupData = {
+        username: username,
+        email: email,
+        password: password,
+      };
+
+      const url = "https://umuco.onrender.com/api/users/register-user";
+      fetch(url, {
+        method: "POST",
+        mode: 'no-cors',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          // Redirect to the login page if registration is successful
+          if (data.success) {
+            window.location.href = "https://superb-marzipan-11b5f3.netlify.app/login.html";
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+
+        
+    });
+  </script>
+</body>
+</html>
